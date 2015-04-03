@@ -1,0 +1,14 @@
+<div class="comment">
+	<div class="meta">
+		<p class="breadcrumbs">
+			<a href="/user/{{data.author}}" class="author">{{data.author}}</a> <strong>&#9654;</strong> <a href="/r/{{data.subreddit}}">{{data.subreddit}}</a>
+		</p>
+		<p class="time">{{#ago data.created_utc}}{{/ago}}</p>
+	</div>
+	{{#selftext}}{{/selftext}}
+	<div class="replies">
+		{{#each data.replies.data.children}}
+			{{#child .}}{{/child}}
+		{{/each}}
+	</div>
+</div>

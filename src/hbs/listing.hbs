@@ -1,0 +1,6 @@
+{{#each data.children}}
+	{{#child .}}{{/child}}
+{{/each}}
+{{#if data.after}}
+	<div id="next" data-url="{{#afterurl data.after}}{{/afterurl}}"></div>
+{{/if}}

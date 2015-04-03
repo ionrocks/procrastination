@@ -1,0 +1,27 @@
+<div class="post">
+	<p class="breadcrumbs">
+		<a href="/user/{{data.author}}" class="author">{{data.author}}</a> <strong>&#9654;</strong> <a href="/r/{{data.subreddit}}" class="subreddit">{{data.subreddit}}</a>
+	</p>
+	<p class="time">{{#ago data.created_utc}}{{/ago}}</p>
+
+	{{#embeddable}}
+		<p class="title">{{#title data.title}}{{/title}}</p>
+	{{else}}
+		<p class="title"><a {{#link data.url}}{{/link}}>{{#title data.title}}{{/title}}</a></p>
+	{{/embeddable}}
+
+	{{#embed}}{{/embed}}
+
+	{{#embeddable}}
+		{{#if data.is_self}}
+		{{else}}
+			{{#if data.url}}
+				<a href="{{data.url}}" target="_blank" class="original-link">original</a>
+			{{/if}}
+		{{/if}}
+	{{/embeddable}}
+	
+	<a href="{{data.permalink}}" class="comments-link">
+		there are <strong>{{data.num_comments}}</strong> comments
+	</a>
+</div>
