@@ -176,6 +176,34 @@ handlers.push({
 	}
 });
 
+handlers.push({
+	test: /.+\/\/([a-z]{1,6}\.)?redgifs\.com\/watch\/([a-z0-9]+).*/i
+	, parse: function(match) {
+		var id = match[2];
+		var placeholder = 'redgifs-' + tiny.util.id();
+
+		return function() {
+			tiny.ajax({
+				url: 'https://api.redgifs.com/v2/gifs/' + id + '/sd.m3u8'
+				, success: function(data) {
+					var fileMatch = /https:\/\/files\.redgifs\.com\/([a-z0-9]+)-mobile\.m4s/i
+					var foundFileMatch = data.match(fileMatch)
+
+					if (foundFileMatch) {
+						var capitalizedId = foundFileMatch[1]
+
+						fillPlaceholder(placeholder, '<a href="' + Handlebars.Utils.escapeExpression(match[0]) + '" target="_blank"><img src="' + Handlebars.Utils.escapeExpression('https://files.redgifs.com/' + capitalizedId + '-poster.jpg') + '" /></a>')
+					}
+				}
+			});
+
+			return templates.placeholder({
+				id: placeholder
+			});
+		};
+	}
+})
+
 // Tumblr
 
 handlers.push({
@@ -397,6 +425,7 @@ handlers.push({
 });
 
 // Some helpful functions
+
 function isEmbed(url) {
 	for (var i = 0, o; i < handlers.length; i += 1) {
 		o = handlers[i];

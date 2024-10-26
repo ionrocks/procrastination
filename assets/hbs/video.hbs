@@ -1,0 +1,8 @@
+<video id="video-{{id}}" controls="controls" preload="none"{{#if poster}} poster="{{poster}}"{{/if}}>
+	{{#if dash_url}}
+		<source src="{{dash_url}}" />
+	{{/if}}
+	{{#if fallback_url}}
+		<source src="{{fallback_url}}" />
+	{{/if}}
+</video>

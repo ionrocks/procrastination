@@ -1,0 +1,4 @@
+baseURL = 'https://procrastinat.ion.rocks/'
+languageCode = 'en-us'
+title = 'reddit + infinity'
+disableKinds = ['taxonomy', 'term', 'rss', 'sitemap']
