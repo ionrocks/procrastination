@@ -56,7 +56,12 @@ Handlebars.registerHelper('afterurl', function(text, options) {
 });
 
 Handlebars.registerHelper('embeddable', function(options) {
-	if (!!isEmbed(this.data.url) || this.data.is_self) {
+	if (
+		!!isEmbed(this.data.url)
+		|| this.data.is_self
+		|| (this.data.gallery_data && this.data.gallery_data.items && this.data.media_metadata)
+		|| (this.data.media && this.data.media.reddit_video)
+	) {
 		return options.fn(this);
 	}
 	else {
@@ -65,6 +70,27 @@ Handlebars.registerHelper('embeddable', function(options) {
 });
 
 Handlebars.registerHelper('embed', function(options) {
+	// Reddit Gallery
+	if (this.data.gallery_data && this.data.gallery_data.items && this.data.media_metadata) {
+		var media_metadata = this.data.media_metadata;
+
+		return this.data.gallery_data.items.map(function (item) {
+			var image = media_metadata[item.media_id];
+
+			return '<img src="' + Handlebars.Utils.escapeExpression(image.s.u.replace(/&amp;/g, '&')) + '" />';
+		}).join('')
+	}
+
+	// Reddit Video
+	if (this.data.media && this.data.media.reddit_video) {
+		return templates.video({
+			id: this.data.name
+			, poster: this.data.preview.images[0].source.url.replace(/&amp;/g, '&')
+			, dash_url: this.data.media.reddit_video.dash_url.replace(/&amp;/g, '&')
+			, fallback_url: this.data.media.reddit_video.fallback_url.replace(/&amp;/g, '&')
+		})
+	}
+
 	// Embeddable
 	if (this.data.url) {
 		var embed = isEmbed(this.data.url);

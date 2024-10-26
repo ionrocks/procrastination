@@ -176,6 +176,34 @@ handlers.push({
 	}
 });
 
+handlers.push({
+	test: /.+\/\/([a-z]{1,6}\.)?([a-z]{1,6}gifs\.com)\/watch\/([a-z0-9]+).*/i
+	, parse: function(match) {
+		var id = match[3];
+		var placeholder = 'gifs-' + tiny.util.id();
+
+		return function() {
+			tiny.ajax({
+				url: 'https://api.' + match[2] + '/v2/gifs/' + id + '/sd.m3u8'
+				, success: function(data) {
+					var fileMatch = /https:\/\/files\.[a-z]{1,6}gifs\.com\/([a-z0-9]+)-mobile\.m4s/i
+					var foundFileMatch = data.match(fileMatch)
+
+					if (foundFileMatch) {
+						var capitalizedId = foundFileMatch[1]
+
+						fillPlaceholder(placeholder, '<a href="' + Handlebars.Utils.escapeExpression(match[0]) + '" target="_blank"><img src="' + Handlebars.Utils.escapeExpression('https://files.' + match[2] + '/' + capitalizedId + '-poster.jpg') + '" /></a>')
+					}
+				}
+			});
+
+			return templates.placeholder({
+				id: placeholder
+			});
+		};
+	}
+})
+
 // Tumblr
 
 handlers.push({
@@ -397,6 +425,7 @@ handlers.push({
 });
 
 // Some helpful functions
+
 function isEmbed(url) {
 	for (var i = 0, o; i < handlers.length; i += 1) {
 		o = handlers[i];

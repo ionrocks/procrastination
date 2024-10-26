@@ -3,7 +3,7 @@
 		<p class="breadcrumbs">
 			<a href="/user/{{data.author}}" class="author">{{data.author}}</a> <strong>&#9654;</strong> <a href="/r/{{data.subreddit}}">{{data.subreddit}}</a>
 		</p>
-		<p class="time">{{#ago data.created_utc}}{{/ago}}</p>
+		<p class="time"><a {{#link data.link_permalink}}{{/link}}>{{#ago data.created_utc}}{{/ago}}</a></p>
 	</div>
 	{{#selftext}}{{/selftext}}
 	<div class="replies">

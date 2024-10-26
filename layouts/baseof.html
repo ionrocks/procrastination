@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>reddit + infinity</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {{ $css := resources.Get "css/style.scss" | resources.ExecuteAsTemplate "style.css" . | css.Sass | minify | fingerprint }}
+    <link rel="stylesheet" href="{{ $css.RelPermalink }}" />
+    {{ hugo.Generator }}
+  </head>
+  <body>
+    <div id="menu">
+      <a href="/">front</a>
+      <a href="/r/all">all</a>
+      <a href="/r/random">random</a>
+      <ul id="sort-menu"></ul>
+    </div>
+    <div id="main"></div>
+
+    {{ $TPL := dict }}
+    {{ range resources.Match "hbs/*.hbs" }}
+      {{ $TPL = merge $TPL (dict (.Name | path.BaseName ) .Content) }}
+    {{ end }}
+    {{ $TPL_BASE := resources.Get "js/templates.js" }}
+    {{ $TPL = printf $TPL_BASE.Content ($TPL | jsonify) }}
+    {{ $TPL = resources.FromString "js/templates.js" $TPL }}
+    {{
+    $JS := slice
+    (resources.Get "js/libs/domparser.js")
+    (resources.Get "js/libs/handlebars.js")
+    (resources.Get "js/libs/tiny.js")
+    $TPL
+    (resources.Get "js/config.js")
+    (resources.Get "js/handlers.js")
+    (resources.Get "js/script.js")
+    (resources.Get "js/sorting.js")
+    (resources.Get "js/twitter.js")
+    }}
+    {{ $combined := $JS | resources.Concat "script.js" | minify | fingerprint }}
+    <script src="{{ $combined.RelPermalink }}"></script>
+
+    <!--For Internet Explorer, Error Pages Must Be 512 Bytes-->
+  </body>
+</html>
