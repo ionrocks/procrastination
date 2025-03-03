@@ -77,7 +77,7 @@ Handlebars.registerHelper('embed', function(options) {
 		return this.data.gallery_data.items.map(function (item) {
 			var image = media_metadata[item.media_id];
 
-			return '<img src="' + Handlebars.Utils.escapeExpression(image.s.u.replace(/&amp;/g, '&')) + '" />';
+			return '<img src="' + Handlebars.Utils.escapeExpression((image.s.u || image.s.gif).replace(/&amp;/g, '&')) + '" />';
 		}).join('')
 	}
 
